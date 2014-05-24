@@ -6,7 +6,7 @@
     var azure = require('azure');
     var uuid = require('node-uuid');
 
-    var lastPollSeconds = 600;
+    var secondsBetweenPolls = 600;
     
     // request API data from NZTA
     //https://infoconnect1.highwayinfo.govt.nz/ic/jbi/SsdfJourney2/REST/FeedService/journey/R04-NB
@@ -75,10 +75,42 @@
                                 pollDateTime: ""
                             };
                         } else {
-                            // find the oldest journey
-                            var maxPollDate;
+                            // get any journeys older than secondsBetweenPolls and delete all but the earliest one
+                            var lastPollDate = new Date(result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0]);
+                            lastPollDate.setSeconds(lastPollDate.getSeconds() - secondsBetweenPolls);
+
+                            var minPollDate;
+                            var oldJourneys = [];
                             var j = 0;
                             for (var i = 0; i < entities.length; i++) {
+                                if (new Date(entities[i].pollDateTime) <= lastPollDate) {
+                                    if (minPollDate === undefined || new Date(entities[i].pollDateTime) > minPollDate) {
+                                        minPollDate = new Date(entities[i].pollDateTime);
+                                    }
+                                    oldJourneys[j] = entities[i];
+                                    j++;
+                                }
+                            }
+
+                            // delete all but earliest >= lastPollDate journey 
+                            for (i = 0; i < oldJourneys.length; i++) {
+                                if (oldJourneys[i].pollDateTime == minPollDate) continue;
+                                
+                                // delete
+                                tableService.deleteEntity('journey', {
+                                    PartitionKey: oldJourneys[i].PartitionKey,
+                                    RowKey: oldJourneys[i].RowKey
+                                }, function (deleteError) {
+                                    if (deleteError) {
+                                        throw deleteError;
+                                    }
+                                });
+                            }
+
+                            // find the oldest journey
+                            var maxPollDate;
+                            j = 0;
+                            for (i = 0; i < entities.length; i++) {
                                 if (!maxPollDate) {
                                     maxPollDate = new Date(entities[i].pollDateTime);
                                     j = i;
@@ -108,16 +140,7 @@
                             lastPollDateTime: lastJourney.pollDateTime
                         };
 
-                        // cache the last poll...
-                        //  if none in cache
-                        //  -or- last poll is older than 
-
-                        //var pollDate = new Date(journey.pollDateTime);
-                        //var dateKey = moment(pollDate).format("YYYYMMDDHHmm");
-
-                        // add latest journey and add back to cache
-
-                        // save new journey
+                        // save latest journey
                         tableService.insertEntity('journey', journey, function (insertError) {
                             if (insertError) {
                                 throw 'Could not insert:' + insertError;
