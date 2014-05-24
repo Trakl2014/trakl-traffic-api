@@ -33,6 +33,7 @@
     <Compile Include="journey.js" />
     <Compile Include="journey_list.js" />
     <Compile Include="server.js" />
+    <Compile Include="webjobs\poll-journeys.js" />
     <Content Include=".gitignore" />
     <Content Include="LICENSE" />
     <Content Include="Web.config" />
@@ -46,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="webjobs\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
   <ProjectExtensions>
