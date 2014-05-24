@@ -8,7 +8,10 @@
     "email": ""
   },
   "dependencies": {
-    "xml2js":"*"
+    "xml2js":"*",
+    "node-cache":"*",
+    "moment":"*",
+    "azure":"*"
   }
 
 }
