@@ -1,0 +1,10 @@
+{
+  "name": "Trackl_Api",
+  "version": "0.0.0",
+  "description": "Trackl-Api",
+  "main": "server.js",
+  "author": {
+    "name": "dlarsen",
+    "email": ""
+  }
+}
