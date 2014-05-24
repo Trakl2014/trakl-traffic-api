@@ -14,10 +14,10 @@ exports.getNames = function (filename, callback) {
 				journey = {
 					name: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:name"][0],
 					ref: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:reference"][0],
-					startLat: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][0]["tns:startLocation"][0]["tns:latitude"],
-					startLong: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][0]["tns:startLocation"][0]["tns:longitude"],
-					endLat: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"].length - 1]["tns:endLocation"][0]["tns:latitude"],
-					endLong: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"].length - 1]["tns:endLocation"][0]["tns:longitude"]
+					startLat: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][0]["tns:startLocation"][0]["tns:latitude"][0],
+					startLong: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][0]["tns:startLocation"][0]["tns:longitude"][0],
+					endLat: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"].length - 1]["tns:endLocation"][0]["tns:latitude"][0],
+					endLong: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"].length - 1]["tns:endLocation"][0]["tns:longitude"][0]
 				}
 				journeys[i] = journey;
 			}
