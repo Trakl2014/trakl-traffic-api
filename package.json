@@ -6,5 +6,9 @@
   "author": {
     "name": "dlarsen",
     "email": ""
+  },
+  "dependencies": {
+    "xml2js":"*"
   }
+
 }

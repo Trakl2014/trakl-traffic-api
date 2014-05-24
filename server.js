@@ -1,6 +1,9 @@
 ﻿var http = require('http');
 var https = require('https');
+var xml2js = require('xml2js');
+
 var port = process.env.port || 1337;
+
 
 http.createServer(function (req, res) {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -30,11 +33,22 @@ http.createServer(function (req, res) {
 
         nztaResponse.on('end', function () {
             // final response, now process data
-            console.log('End response.');
+            console.log('response end.');
 
-            // end response
-            res.statusCode = 200;
-            res.end(nztaData);
+            xml2js.parseString(nztaData, function (err, result) {
+                
+                var nztaJson = JSON.stringify(result);
+
+                // end response
+                res.statusCode = 200;
+                res.end(nztaJson);
+
+                
+            });
+
+
+
+
         });
 
     });
