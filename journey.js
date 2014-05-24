@@ -40,8 +40,16 @@
             xml2js.parseString(nztaData, function (err, result) {
                 var journey = {
                     name: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0],
-                    averageSpeed: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:averageSpeed"][0]
-                }
+
+                    averageSpeed: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:averageSpeed"][0],
+                    minutes: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimate"][0],
+                    pollDateTime: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0],
+
+                    //TODO:
+                    lastAverageSpeed: "",
+                    lastMinutes: "",
+                    lastPollDateTime: ""
+                };
 
                 callback(journey);
             });
