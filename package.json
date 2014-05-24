@@ -11,7 +11,8 @@
     "xml2js":"*",
     "node-cache":"*",
     "moment":"*",
-    "azure":"*"
+    "azure":"*",
+    "node-uuid":"*"
   }
 
 }

@@ -7,6 +7,7 @@
     //var mongoose = require('mongoose'), Schema = mongoose.Schema;
     var azure = require('azure');
     //var ServiceClient = azure.ServiceClient;
+    var uuid = require('node-uuid');
 
     var lastPollSeconds = 600;
     
@@ -75,7 +76,7 @@
                         if (entities.length == 0) {
                             lastJourney = {
                                 PartitionKey: 'journeys',
-                                RowKey: '1',
+                                RowKey: uuid.v4(),
                                 averageSpeed: "",
                                 minutes: "",
                                 pollDateTime: ""
@@ -99,12 +100,9 @@
                             lastJourney = entities[j];
                         }
 
-                        var rowKey = new Number(lastJourney.RowKey);
-                        rowKey += 1;
-
                         var journey = {
                             PartitionKey: 'journeys',
-                            RowKey: rowKey.toString(),
+                            RowKey: uuid.v4(),
 
                             name: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0],
 
