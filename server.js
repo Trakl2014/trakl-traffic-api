@@ -20,9 +20,12 @@ http.createServer(function (req, res) {
             });
             break;
         case "/journeys":
-            // Peter: Call your function here....
-            res.statusCode = 200;
-            res.end("{'message':'/journeys coming soon'}");
+            var journeyList = require('./journey_list.js');
+            journeyList.getNames('./Auckland-Journeys.xml', function(data) {
+                res.statusCode = 200;
+                res.end(data);
+            });
+            break;
         default:
             res.statusCode = 200;
             res.end("{'message':'Expecting /journey/REF or /journeys'}");
