@@ -57,7 +57,7 @@
                     var query = azure.TableQuery
                         .select()
                         .from('journey')
-                        .where('PartitionKey eq ?', 'journeys');
+                        .where('PartitionKey eq ?', ref);
 
                     tableService.queryEntities(query, function (queryError, entities) {
                         if (queryError) {
@@ -68,7 +68,7 @@
 
                         if (entities.length == 0) {
                             lastJourney = {
-                                PartitionKey: 'journeys',
+                                PartitionKey: ref,
                                 RowKey: uuid.v4(),
                                 averageSpeed: "",
                                 minutes: "",
@@ -126,7 +126,7 @@
                         }
 
                         var journey = {
-                            PartitionKey: 'journeys',
+                            PartitionKey: ref,
                             RowKey: uuid.v4(),
 
                             name: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0],
