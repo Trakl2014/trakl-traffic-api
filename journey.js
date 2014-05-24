@@ -2,11 +2,8 @@
     var https = require('https');
     var xml2js = require('xml2js');
     var url = require('url');
-    //var nodeCache = require("node-cache");
     var moment = require('moment');
-    //var mongoose = require('mongoose'), Schema = mongoose.Schema;
     var azure = require('azure');
-    //var ServiceClient = azure.ServiceClient;
     var uuid = require('node-uuid');
 
     var lastPollSeconds = 600;
@@ -48,10 +45,6 @@
 
             xml2js.parseString(nztaData, function (err, result) {
 
-//                // get from cache
-//                var cache = new nodeCache();
-//                cache.get(ref, function(cacheErr, cacheResult) {
-
                 var tableService = azure.createTableService(process.env.StorageAccountName,
                     process.env.StorageAccountKey,
                     process.env.StorageAccountTableStoreHost);
@@ -91,7 +84,7 @@
                                     j = i;
                                     continue;
                                 }
-                                if (new Date(entities[i].pollDateTime) > maxPollDate) {
+                                if (new Date(entities[i].pollDateTime) < maxPollDate) {
                                     maxPollDate = new Date(entities[i].pollDateTime);
                                     j = i;
                                 }
@@ -110,7 +103,6 @@
                             minutes: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimate"][0],
                             pollDateTime: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0],
 
-                            //TODO:
                             lastAverageSpeed: lastJourney.averageSpeed,
                             lastMinutes: lastJourney.minutes,
                             lastPollDateTime: lastJourney.pollDateTime
