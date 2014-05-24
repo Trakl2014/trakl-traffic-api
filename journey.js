@@ -14,7 +14,7 @@
     var query = url.parse(reqUrl, true).query;
     var ref = query["ref"];
 
-    if (!ref) {
+    if (!ref || ref == 'undefined') {
         callback(JSON.parse('{"message":"/journey expects ?ref=REF"}'));
         return;
     }
