@@ -1,14 +1,22 @@
-﻿exports.getJourneyData = function (url, callback) {
+﻿exports.getJourneyData = function (reqUrl, callback) {
     var https = require('https');
     var xml2js = require('xml2js');
+    var url = require('url');
 
     // request API data from NZTA
     //https://infoconnect1.highwayinfo.govt.nz/ic/jbi/SsdfJourney2/REST/FeedService/journey/R04-NB
 
+    var query = url.parse(reqUrl, true).query;
+
+    if (!query["ref"]) {
+        callback(JSON.parse('{"message":"/journey expects ?ref=REF"}'));
+        return;
+    }
+
     var nztaOptions = {
         host: 'infoconnect1.highwayinfo.govt.nz',
         port: 443,
-        path: '/ic/jbi/SsdfJourney2/REST/FeedService/journey/R04-NB',
+        path: '/ic/jbi/SsdfJourney2/REST/FeedService/journey/' + query["ref"],
         headers: {
             "username": "DanielLa",
             "password": "Password1"
