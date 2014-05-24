@@ -57,7 +57,7 @@
 
                 tableService.createTableIfNotExists('journey', function (error) {
                     if (error) {
-                        throw 'Could not create table';
+                        throw 'Could not create table: ' + error;
                     }
 
                     var query = azure.TableQuery
@@ -67,7 +67,7 @@
 
                     tableService.queryEntities(query, function (queryError, entities) {
                         if (queryError) {
-                            throw 'Could not query entities';
+                            throw 'Could not query entities: ' + queryError;
                         }
 
                         var lastJourney;
@@ -130,7 +130,7 @@
                         // save new journey
                         tableService.insertEntity('journey', journey, function (insertError) {
                             if (insertError) {
-                                throw 'Could not insert';
+                                throw 'Could not insert:' + insertError;
                             }
 
                             // Entity inserted
