@@ -27,7 +27,7 @@ http.createServer(function (req, res) {
             break;
         default:
             res.statusCode = 200;
-            res.end("{'message':'Expecting /journey/REF or /journeys'}");
+            res.end('{"message":"Expecting /journey/REF or /journeys"}');
     }
 
 }).listen(port);
