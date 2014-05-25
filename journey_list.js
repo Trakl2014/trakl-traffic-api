@@ -3,13 +3,12 @@ exports.getNames = function (filename, callback) {
 
 	fs.readFile(filename, function (err,data) {
 		var parseString = require('xml2js').parseString;
-		console.log("I've got the data (from the XML file)");
+		console.log("I've got the data! (from the XML file)");
 		parseString(data, function (err, result) {
 
 			var journeys = [];
 			for (var i = 0; i < result["tns:findAllJourneysResponse"]["tns:return"].length; i++) {
-				// console.log("length: " +result["tns:findAllJourneysResponse"]["tns:return"].length + " i: "+ i);
-				if (result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:type"][0]["tns:id"][0] = "3") {
+				// if (result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:type"][0]["tns:id"][0] === "12") {
 					if (!result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:name"]) continue;
 					journey = {
 						name: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:name"][0],
@@ -20,9 +19,9 @@ exports.getNames = function (filename, callback) {
 						endLong: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"].length - 1]["tns:endLocation"][0]["tns:longitude"][0]
 					}
 					journeys[i] = journey;
-				}
+				// }
 			}
-			callback(JSON.stringify(journeys));
+			callback(journeys);
 		});
 	});
 }
