@@ -19,7 +19,7 @@ http.createServer(function (req, res) {
             });
             break;
         case "/journeys":
-            var journeyList = require('./journey_list.js');
+            var journeyList = require('./journeyList.js');
             journeyList.getNames('./Auckland-Journeys.xml', function(data) {
                 res.statusCode = 200;
                 res.end(JSON.stringify(data));
