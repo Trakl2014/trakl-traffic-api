@@ -8,11 +8,10 @@
     "email": ""
   },
   "dependencies": {
-    "xml2js":"*",
-    "node-cache":"*",
-    "moment":"*",
-    "azure":"*",
-    "node-uuid":"*"
+    "xml2js": "*",
+    "node-cache": "*",
+    "moment": "^2.6.0",
+    "azure": "^0.9.7",
+    "node-uuid": "^1.4.1"
   }
-
 }
