@@ -1,5 +1,6 @@
 trackl-traffic-api
 ======
+[![Build status](https://ci.appveyor.com/api/projects/status/ahgws3we9dq77xph)](https://ci.appveyor.com/project/tharax/trackl-traffic-api)
 
 A simple API for querying interesting data about the Auckland traffic network.
 
