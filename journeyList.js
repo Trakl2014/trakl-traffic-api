@@ -8,7 +8,6 @@ exports.getNames = function (filename, callback) {
 
 			var journeys = [];
 			for (var i = 0; i < result["tns:findAllJourneysResponse"]["tns:return"].length; i++) {
-				// if (result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:type"][0]["tns:id"][0] === "12") {
 					if (!result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:name"]) continue;
 					journey = {
 						name: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:name"][0],
@@ -19,7 +18,6 @@ exports.getNames = function (filename, callback) {
 						endLong: result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"][result["tns:findAllJourneysResponse"]["tns:return"][i]["tns:segments"].length - 1]["tns:endLocation"][0]["tns:longitude"][0]
 					}
 					journeys[i] = journey;
-				// }
 			}
 			callback(journeys);
 		});
