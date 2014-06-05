@@ -127,7 +127,11 @@
 
                 //                 lastJourney = entities[j];
                 //             }
-
+                var lastJourney = {
+                    averageSpeed: "",
+                    minutes: "",
+                    pollDateTime: ""
+                };
                 var journey = {
                     // PartitionKey: ref,
                     // RowKey: uuid.v4(),
@@ -135,12 +139,12 @@
                     name: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0],
                     averageSpeed: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:averageSpeed"][0],
                     minutes: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimate"][0],
-                    pollDateTime: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0]
-                    // lastAverageSpeed: lastJourney.averageSpeed,
-                    // lastMinutes: lastJourney.minutes,
-                    // lastPollDateTime: lastJourney.pollDateTime
+                    pollDateTime: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0],
+                    lastAverageSpeed: lastJourney.averageSpeed,
+                    lastMinutes: lastJourney.minutes,
+                    lastPollDateTime: lastJourney.pollDateTime
                 };
-                console.log(journey);
+                console.log(journey + " | " + lastJourney);
                 callback(journey);
 
                 //             // save latest journey

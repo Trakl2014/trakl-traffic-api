@@ -28,3 +28,5 @@ node_modules
 bin
 obj
 *.suo
+trakl-traffic-ap1-v2.sublime-project
+trakl-traffic-ap1-v2.sublime-workspace
