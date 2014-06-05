@@ -1,12 +1,14 @@
 ﻿var http = require('http');
-var port = process.env.port || 1337;
+var port = process.env.PORT || 1337;
 var url = require('url');
 
 console.log('Server started on port: ' + port);
 
-http.createServer(function (req, res) {
+http.createServer(function(req, res) {
 
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, {
+        'Content-Type': 'application/json'
+    });
     console.log('Request URL = ' + req.url);
     var pathname = url.parse(req.url).pathname;
 
