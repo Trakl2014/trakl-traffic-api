@@ -25,7 +25,7 @@ http.createServer(function (req, res) {
             });
             break;
         case "/journeys":
-            var journeyList = require('./journey_list.js');
+            var journeyList = require('./journeyList.js');
             journeyList.getNames('./Auckland-Journeys.xml', function(data) {
                 res.statusCode = 200;
                 res.end(data);
@@ -46,7 +46,7 @@ http.createServer(function (req, res) {
             break;
         default:
             res.statusCode = 200;
-            res.end("{'message':'Expecting /journey/REF or /journeys'}");
+            res.end('{"message":"Expecting /journey/REF or /journeys"}');
     }
 
 }).listen(port);

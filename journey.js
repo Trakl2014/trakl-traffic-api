@@ -19,7 +19,7 @@
         .from('journey')
         .where('PartitionKey eq ?', ref);
 
-    repo.get(tableQuery, function(error, entities) {
+    repo.get(tableQuery, function (error, entities) {
         if (error) {
             callback(error);
             return;
@@ -33,11 +33,12 @@
         // wow - projection - thanks linq.js! Projecting here to strip the Table Storage fluff.
         var journeys = Enumerable.from(entities)
             .orderByDescending(function (e) { return e.pollDateTime; })
-            .select(function (e) { return {
-                name: e.name,
-                averageSpeed: e.averageSpeed,
-                minutes: e.minutes,
-                pollDateTime: e.pollDateTime
+            .select(function (e) {
+                return {
+                    name: e.name,
+                    averageSpeed: e.averageSpeed,
+                    minutes: e.minutes,
+                    pollDateTime: e.pollDateTime
                 }
             })
             .take(maxJourneysInHistory)

@@ -1,5 +1,6 @@
 trackl-traffic-api
 ======
+[![Build status](https://ci.appveyor.com/api/projects/status/vh49dcwj7i03qlme)](https://ci.appveyor.com/project/tharax/trakl-traffic-api)
 
 A simple API for querying interesting data about the Auckland traffic network.
 
@@ -34,18 +35,19 @@ A simple API for querying interesting data about the Auckland traffic network.
 
 #### Get Specific Journey Detail
 
-`/journey?ref=R87-NB`
+`/journey?ref=R26-NB`
 
 ###### Example Response:
-
-    {
-        "PartitionKey": "journeys",
-        "RowKey": "69caacb7-0547-4a50-88cc-7ba8d6a0e064",
-        "name": "R87-NB - Queen Street",
-        "averageSpeed": "11.97",
-        "minutes": "4",
-        "pollDateTime": "2014-05-25T01:05:00.767+12:00",
-        "lastAverageSpeed": "47.67",
-        "lastMinutes": "24",
-        "lastPollDateTime": "2014-05-24T23:31:59.377+12:00"
-    }
+```
+{
+    "PartitionKey": "R26-NB",
+    "RowKey": "060ad8c8-b7fd-420c-8cd4-695131f823de",
+    "name": "R26-NB - Devonport to Tristram Rd",
+    "averageSpeed": "38.61",
+    "minutes": "14",
+    "pollDateTime": "2014-05-25T09:20:16.240+12:00",
+    "lastAverageSpeed": "36.31",
+    "lastMinutes": "15",
+    "lastPollDateTime": "2014-05-25T09:09:10.773+12:00"
+}
+```
