@@ -1,7 +1,7 @@
 ﻿exports.pollJourney = function(reqUrl, callback) {
     var url = require('url');
-    var azure = require('azure');
     var uuid = require('node-uuid');
+    var repo = require('./journey-repository.js');
 
     var query = url.parse(reqUrl, true).query;
     var ref = query["ref"];
@@ -18,80 +18,82 @@
             return;
         }
         
-        // The NTVS can't see the AppSettings, so if null, must be debugging, use Development Storage
-        var tableService = process.env.StorageAccountName === undefined 
-                           ? azure.createTableService("devstoreaccount1",
-                                                       "Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==",
-                                                       "127.0.0.1:10002")
-                           : azure.createTableService(process.env.StorageAccountName,
-                                                       process.env.StorageAccountKey,
-                                                       process.env.StorageAccountTableStoreHost);
+        // save latest journey
+        journey.PartitionKey = ref;
+        journey.RowKey = uuid.v4();
 
-        tableService.createTableIfNotExists('journey', function (error) {
+        repo.insert(journey, function(error) {
             if (error) {
                 callback(error);
                 return;
             }
 
-            // save latest journey
-            journey.PartitionKey = ref;
-            journey.RowKey = uuid.v4();
-
-            tableService.insertEntity('journey', journey, function (insertError) {
-                if (insertError) {
-                    callback(insertError);
+            deleteOldPollData(ref, journey.pollDateTime, function (error) {
+                if (error) {
+                    callback(error);
                     return;
                 }
-
-                deleteOldPollData(tableService, ref, journey.pollDateTime, function(err) {
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
-                    callback(null, journey);
-                });
+                callback(null, journey);
             });
         });
     });
 };
 
-var deleteOldPollData = function (tableService, ref, pollDateTime, callback) {
+var deleteOldPollData = function (ref, pollDateTime, callback) {
     var azure = require('azure');
-    
-    var secondsBetweenPolls = 600;
+    var repo = require('./journey-repository.js');
+
+    var secondsBetweenPolls = 300;
     var numberOfPollsToKeep = 10;
 
     // delete all journeys > 10 * secondsBetweenPolls
-    var oldestJourneyDateToKeep = pollDateTime;
+    var oldestJourneyDateToKeep = new Date(pollDateTime);
     oldestJourneyDateToKeep.setSeconds(oldestJourneyDateToKeep.getSeconds() - (secondsBetweenPolls * numberOfPollsToKeep));
 
     var tableQuery = azure.TableQuery
         .select()
         .from('journey')
         .where('PartitionKey eq ?', ref)
-        .where('pollDateTime lt ?', oldestJourneyDateToKeep);
+        .and('pollDateTime lt ?', oldestJourneyDateToKeep);
 
-    tableService.queryEntities(tableQuery, function(queryError, entities) {
-        if (queryError) {
-            callback(queryError);
+    repo.get(tableQuery, function(error, entities) {
+        if (error) {
+            callback(error);
             return;
         }
 
-        for (var i = 0; i < entities.length; i++) {
-            // entities
-            tableService.deleteEntity('journey', {
-                PartitionKey: entities[i].PartitionKey,
-                RowKey: entities[i].RowKey
-            }, function(deleteError) {
-                if (deleteError) {
-                    callback(deleteError);
-                    return;
-                }
-            });
-        }
-        callback(null);
+        deleteEntities(repo, entities, function(error) {
+            if (error) {
+                callback(error);
+                return;
+            }
+            callback(null);
+        });
     });
 };
+
+// recursively delete expired entities
+var deleteEntities = function(repo, entities, callback) {
+    console.log("deleting " + entities.length + " journeys");
+    var entity = entities.pop();
+
+    if (entity == undefined) {
+        // no more
+        callback(null);
+        return;
+    }
+
+    console.log("deleting " + entity.PartitionKey + " " + entity.RowKey);
+
+    repo.delete(entity, function (error) {
+        if (error) {
+            callback(error);
+            return;
+        }
+
+        deleteEntities(repo, entities, callback);
+    });
+}
 
 var getNztaData = function (ref, callback) {
     var https = require('https');
@@ -100,9 +102,9 @@ var getNztaData = function (ref, callback) {
     // if no appsettings, then we must be debugging locally, mock out the data call and return stub data
     if (process.env.NztaUsername === undefined) {
         var fakeData = {
-            name: "TEST-WB",
-            averageSpeed: Math.random(1, 50),
-            minutes: Math.random(5, 60),
+            name: "This is a TEST - " + ref,
+            averageSpeed: Math.round(Math.random() * 50),
+            minutes: Math.round(Math.random() * 30),
             pollDateTime: new Date(),
         };
         callback(null, fakeData);

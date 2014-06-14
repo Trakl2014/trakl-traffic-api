@@ -27,7 +27,7 @@ var pollJourneys = function() {
                 var journeyOptions = {
                     host: 'trackl-traffic-api.azurewebsites.net',
                     port: 80,
-                    path: '/journey?ref=' + journeys[i].ref
+                    path: '/pollJourney?ref=' + journeys[i].ref
                 };
 
                 http.get(journeyOptions, function(journeyResponse) {

@@ -13,7 +13,12 @@ http.createServer(function (req, res) {
     switch (pathname) {
         case "/journey":
             var journey = require('./journey.js');
-            journey.getJourneyData(req.url, function(data) {
+            journey.getJourneyData(req.url, function(error, data) {
+                if (error) {
+                    res.statusCode = 500;
+                    res.end('{"ok":"false", "message":"' + error + '"}');
+                }
+
                 // end response
                 res.statusCode = 200;
                 res.end(JSON.stringify(data));
@@ -24,6 +29,19 @@ http.createServer(function (req, res) {
             journeyList.getNames('./Auckland-Journeys.xml', function(data) {
                 res.statusCode = 200;
                 res.end(data);
+            });
+            break;
+        case "/pollJourney":
+            var pollInfoConnect = require('./poll-infoconnect.js');
+            pollInfoConnect.pollJourney(req.url, function (error, data) {
+                if (error) {
+                    res.statusCode = 500;
+                    res.end('{"ok":"false", "message":"' + error + '"}');
+                }
+
+                // end response
+                res.statusCode = 200;
+                res.end(JSON.stringify(data));
             });
             break;
         default:
