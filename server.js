@@ -28,7 +28,7 @@ http.createServer(function (req, res) {
             var journeyList = require('./journeyList.js');
             journeyList.getNames('./Auckland-Journeys.xml', function(data) {
                 res.statusCode = 200;
-                res.end(data);
+                res.end(JSON.stringify(data));
             });
             break;
         case "/pollJourney":
