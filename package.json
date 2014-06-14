@@ -9,10 +9,8 @@
   },
   "dependencies": {
     "xml2js":"*",
-    "node-cache":"*",
-    "moment":"*",
     "azure":"*",
-    "node-uuid":"*"
+    "node-uuid":"*",
+    "linq":"*"
   }
-
 }

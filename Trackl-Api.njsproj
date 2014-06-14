@@ -31,7 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="journey.js" />
-    <Compile Include="journey_list.js" />
+    <Compile Include="journeyList.js" />
+    <Compile Include="poll-infoconnect.js" />
+    <Compile Include="journey-repository.js" />
     <Compile Include="server.js" />
     <Compile Include="webjobs\poll-journeys.js" />
     <Content Include=".gitignore" />

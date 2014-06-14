@@ -1,19 +1,25 @@
 ﻿var http = require('http');
-var port = process.env.port || 1337;
 var url = require('url');
 
-console.log('Server started on port: ' + port);
+var port = process.env.port || 1337;
 
 http.createServer(function (req, res) {
-
     res.writeHead(200, { 'Content-Type': 'application/json' });
+
     console.log('Request URL = ' + req.url);
+
     var pathname = url.parse(req.url).pathname;
 
     switch (pathname) {
         case "/journey":
             var journey = require('./journey.js');
-            journey.getJourneyData(req.url, function(data) {
+            journey.getJourneyData(req.url, function(error, data) {
+                if (error) {
+                    res.statusCode = 500;
+                    res.end('{"ok":"false", "message":"' + error + '"}');
+                }
+
+                // end response
                 res.statusCode = 200;
                 res.end(JSON.stringify(data));
             });
@@ -21,6 +27,19 @@ http.createServer(function (req, res) {
         case "/journeys":
             var journeyList = require('./journeyList.js');
             journeyList.getNames('./Auckland-Journeys.xml', function(data) {
+                res.statusCode = 200;
+                res.end(data);
+            });
+            break;
+        case "/pollJourney":
+            var pollInfoConnect = require('./poll-infoconnect.js');
+            pollInfoConnect.pollJourney(req.url, function (error, data) {
+                if (error) {
+                    res.statusCode = 500;
+                    res.end('{"ok":"false", "message":"' + error + '"}');
+                }
+
+                // end response
                 res.statusCode = 200;
                 res.end(JSON.stringify(data));
             });

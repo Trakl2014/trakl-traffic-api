@@ -25,6 +25,5 @@ build/Release
 node_modules
 
 
-bin
 obj
 *.suo
