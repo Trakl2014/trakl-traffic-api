@@ -37,17 +37,55 @@ A simple API for querying interesting data about the Auckland traffic network.
 
 `/journey?ref=R26-NB`
 
+Returns the current speed and time of journey, as well as up to ten historical data points.
+
 ###### Example Response:
 ```
 {
-    "PartitionKey": "R26-NB",
-    "RowKey": "060ad8c8-b7fd-420c-8cd4-695131f823de",
-    "name": "R26-NB - Devonport to Tristram Rd",
-    "averageSpeed": "38.61",
-    "minutes": "14",
-    "pollDateTime": "2014-05-25T09:20:16.240+12:00",
-    "lastAverageSpeed": "36.31",
-    "lastMinutes": "15",
-    "lastPollDateTime": "2014-05-25T09:09:10.773+12:00"
+    "name": "R04-NB - Dominion Rd",
+    "averageSpeed": 41.86,
+    "minutes": 9,
+    "pollDateTime": "2014-06-14T11:21:02.983Z",
+    "lastAverageSpeed": 43.36,
+    "lastMinutes": 9,
+    "lastPollDateTime": "2014-06-14T11:14:32.287Z",
+    "journeys": [
+        {
+            "name": "R04-NB - Dominion Rd",
+            "averageSpeed": 41.86,
+            "minutes": 9,
+            "pollDateTime": "2014-06-14T11:21:02.983Z"
+        },
+        {
+            "name": "R04-NB - Dominion Rd",
+            "averageSpeed": 43.36,
+            "minutes": 9,
+            "pollDateTime": "2014-06-14T11:14:32.287Z"
+        },
+        {
+            "name": "R04-NB - Dominion Rd",
+            "averageSpeed": 43.68,
+            "minutes": 9,
+            "pollDateTime": "2014-06-14T11:11:20.370Z"
+        },
+        {
+            "name": "R04-NB - Dominion Rd",
+            "averageSpeed": 43.59,
+            "minutes": 9,
+            "pollDateTime": "2014-06-14T11:05:12.677Z"
+        },
+        {
+            "name": "R04-NB - Dominion Rd",
+            "averageSpeed": 43.4,
+            "minutes": 9,
+            "pollDateTime": "2014-06-14T10:59:00.023Z"
+        },
+        {
+            "name": "R04-NB - Dominion Rd",
+            "averageSpeed": 43.17,
+            "minutes": 9,
+            "pollDateTime": "2014-06-14T10:53:04.030Z"
+        }
+    ]
 }
 ```
