@@ -1,5 +1,7 @@
-﻿var http = require('http');
+﻿require('newrelic');
+var http = require('http');
 var url = require('url');
+
 
 var port = process.env.port || 1337;
 

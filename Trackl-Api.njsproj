@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="journey.js" />
     <Compile Include="journeyList.js" />
+    <Compile Include="newrelic.js" />
     <Compile Include="poll-infoconnect.js" />
     <Compile Include="journey-repository.js" />
     <Compile Include="server.js" />

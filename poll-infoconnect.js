@@ -18,26 +18,64 @@
             return;
         }
         
-        // save latest journey
-        journey.PartitionKey = ref;
-        journey.RowKey = uuid.v4();
-
-        repo.insert(journey, function(error) {
+        // check that this poll has not already been saved
+        checkHasJourneyBeenSaved(ref, journey.pollDateTime, function (error, saved) {
             if (error) {
                 callback(error);
                 return;
             }
 
-            deleteOldPollData(ref, journey.pollDateTime, function (error) {
+            if (saved) {
+                // Already an instance of this journey in storage. quit.
+                console.log("journey ref " + ref + " pollDateTime " + journey.pollDateTime + " has already been saved to storage.");
+                callback(null, journey);
+                return;
+            }
+
+            // save latest journey
+            journey.PartitionKey = ref;
+            journey.RowKey = uuid.v4();
+
+            repo.insert(journey, function (error) {
                 if (error) {
                     callback(error);
                     return;
                 }
-                callback(null, journey);
+
+                // clean up journey history
+                deleteOldPollData(ref, journey.pollDateTime, function (error) {
+                    if (error) {
+                        callback(error);
+                        return;
+                    }
+
+                    callback(null, journey);
+                });
             });
         });
     });
 };
+
+// Checks if a journey with ref and pollDateTime already exists in storage. If so, returns true.
+var checkHasJourneyBeenSaved = function (ref, pollDateTime, callback) {
+    var azure = require('azure');
+    var repo = require('./journey-repository.js');
+
+    var tableQuery = azure.TableQuery
+    .select()
+    .from('journey')
+    .where('PartitionKey eq ?', ref)
+    .and('pollDateTime eq ?', pollDateTime);
+
+    repo.get(tableQuery, function(error, entities) {
+        if (error) {
+            callback(error);
+            return;
+        }
+
+        callback(null, entities.length > 0);
+    });
+}
 
 var deleteOldPollData = function (ref, pollDateTime, callback) {
     var azure = require('azure');
@@ -72,19 +110,20 @@ var deleteOldPollData = function (ref, pollDateTime, callback) {
     });
 };
 
-// recursively delete expired entities
+// recursively delete expired entities - good example of async loop problem.
 var deleteEntities = function(repo, entities, callback) {
     console.log("deleting " + entities.length + " journeys");
-    var entity = entities.pop();
 
+    var entity = entities.pop();
     if (entity == undefined) {
         // no more
         callback(null);
         return;
     }
 
-    console.log("deleting " + entity.PartitionKey + " " + entity.RowKey);
+    console.log("deleting journey " + entity.PartitionKey + " " + entity.RowKey);
 
+    // delete the entity. The callback calls this function recursively.
     repo.delete(entity, function (error) {
         if (error) {
             callback(error);

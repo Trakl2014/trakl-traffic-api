@@ -4,13 +4,14 @@
   "description": "Trackl-Api",
   "main": "server.js",
   "author": {
-    "name": "dlarsen",
+    "name": "DanielLarsenNZ",
     "email": ""
   },
   "dependencies": {
     "xml2js":"*",
     "azure":"*",
     "node-uuid":"*",
-    "linq":"*"
+    "linq":"*",
+    "newrelic":"*"
   }
 }
