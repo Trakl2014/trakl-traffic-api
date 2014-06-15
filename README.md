@@ -89,3 +89,10 @@ Returns the current speed and time of journey, as well as up to ten historical d
     ]
 }
 ```
+
+## Contributing
+This project has been developed in Visual Studio 2013 with [Node.js Tools for Visual Studio](https://nodejstools.codeplex.com/) (NTVS). You don't need Visual Studio or NTVS to work on this project, but if you want to open the (Visual Studio) solution you will need NTVS installed (It's a great add-on - check it out).
+
+The API currently uses Azure Table Storage. To emulate storage on your development environment you will need to install the [Azure SDK](http://www.microsoft.com/en-nz/download/details.aspx?id=42317) and start the Storage Emulator.
+
+If you need help getting this working on your Dev Environment, don't hesitate to create an issue.
