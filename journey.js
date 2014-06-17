@@ -44,6 +44,9 @@
             console.log('response end.');
             try {
                 xml2js.parseString(nztaData, function(err, result) {
+                    if (err) {
+                        console.log('error in nztaResponse on.. line 48')
+                    };
                     console.log(nztaData);
                     console.log('--------');
                     console.log(result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0]);
