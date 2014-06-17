@@ -42,123 +42,37 @@
         nztaResponse.on('end', function() {
             // final response, now process data
             console.log('response end.');
+            try {
+                xml2js.parseString(nztaData, function(err, result) {
+                    console.log(nztaData);
+                    console.log('--------');
+                    console.log(result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0]);
 
-            xml2js.parseString(nztaData, function(err, result) {
-                console.log(nztaData);
-                console.log('--------');
-                console.log(result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0]);
+                    var lastJourney = {
+                        averageSpeed: "",
+                        minutes: "",
+                        pollDateTime: ""
+                    };
+                    var journey = {
+                        // PartitionKey: ref,
+                        // RowKey: uuid.v4(),
 
-                //     var tableService = azure.createTableService(process.env.StorageAccountName,
-                //         process.env.StorageAccountKey,
-                //         process.env.StorageAccountTableStoreHost);
+                        name: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0],
+                        averageSpeed: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:averageSpeed"][0],
+                        minutes: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimate"][0],
+                        pollDateTime: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0],
+                        lastAverageSpeed: lastJourney.averageSpeed,
+                        lastMinutes: lastJourney.minutes,
+                        lastPollDateTime: lastJourney.pollDateTime
+                    };
+                    console.log(journey + " | " + lastJourney);
+                    callback(journey);
 
-                //     tableService.createTableIfNotExists('journey', function (error) {
-                //         if (error) {
-                //             throw 'Could not create table: ' + error;
-                //         }
+                });
+            } catch (e) {
+                console.log('error in nztaResponse on' + e)
+            }
 
-                //         var query = azure.TableQuery
-                //             .select()
-                //             .from('journey')
-                //             .where('PartitionKey eq ?', ref);
-
-                //         tableService.queryEntities(query, function (queryError, entities) {
-                //             if (queryError) {
-                //                 throw 'Could not query entities: ' + queryError;
-                //             }
-
-                //             var lastJourney;
-
-                //             if (entities.length == 0) {
-                //                 lastJourney = {
-                //                     PartitionKey: ref,
-                //                     RowKey: uuid.v4(),
-                //                     averageSpeed: "",
-                //                     minutes: "",
-                //                     pollDateTime: ""
-                //                 };
-                //             } else {
-                //                 // get any journeys older than secondsBetweenPolls and delete all but the earliest one
-                //                 var lastPollDate = new Date(result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0]);
-                //                 lastPollDate.setSeconds(lastPollDate.getSeconds() - secondsBetweenPolls);
-
-                //                 var minPollDate;
-                //                 var oldJourneys = [];
-                //                 var j = 0;
-                //                 for (var i = 0; i < entities.length; i++) {
-                //                     if (new Date(entities[i].pollDateTime) <= lastPollDate) {
-                //                         if (minPollDate === undefined || new Date(entities[i].pollDateTime) > minPollDate) {
-                //                             minPollDate = new Date(entities[i].pollDateTime);
-                //                         }
-                //                         oldJourneys[j] = entities[i];
-                //                         j++;
-                //                     }
-                //                 }
-
-                //                 // delete all but earliest >= lastPollDate journey 
-                //                 for (i = 0; i < oldJourneys.length; i++) {
-                //                     if (oldJourneys[i].pollDateTime == minPollDate) continue;
-
-                //                     // delete
-                //                     tableService.deleteEntity('journey', {
-                //                         PartitionKey: oldJourneys[i].PartitionKey,
-                //                         RowKey: oldJourneys[i].RowKey
-                //                     }, function (deleteError) {
-                //                         if (deleteError) {
-                //                             throw deleteError;
-                //                         }
-                //                     });
-                //                 }
-
-                //                 // find the oldest journey
-                //                 var maxPollDate;
-                //                 j = 0;
-                //                 for (i = 0; i < entities.length; i++) {
-                //                     if (!maxPollDate) {
-                //                         maxPollDate = new Date(entities[i].pollDateTime);
-                //                         j = i;
-                //                         continue;
-                //                     }
-                //                     if (new Date(entities[i].pollDateTime) < maxPollDate) {
-                //                         maxPollDate = new Date(entities[i].pollDateTime);
-                //                         j = i;
-                //                     }
-                //                 }
-
-                //                 lastJourney = entities[j];
-                //             }
-                var lastJourney = {
-                    averageSpeed: "",
-                    minutes: "",
-                    pollDateTime: ""
-                };
-                var journey = {
-                    // PartitionKey: ref,
-                    // RowKey: uuid.v4(),
-
-                    name: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:name"][0],
-                    averageSpeed: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:averageSpeed"][0],
-                    minutes: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimate"][0],
-                    pollDateTime: result["tns:findJourneyByReferenceResponse"]["tns:return"][0]["tns:lastEstimateTime"][0],
-                    lastAverageSpeed: lastJourney.averageSpeed,
-                    lastMinutes: lastJourney.minutes,
-                    lastPollDateTime: lastJourney.pollDateTime
-                };
-                console.log(journey + " | " + lastJourney);
-                callback(journey);
-
-                //             // save latest journey
-                //             tableService.insertEntity('journey', journey, function (insertError) {
-                //                 if (insertError) {
-                //                     throw 'Could not insert:' + insertError;
-                //                 }
-
-                //                 // Entity inserted
-                //                 callback(journey);
-                //             });
-                //         });
-                //     });
-            });
         });
     });
 };
